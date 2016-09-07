@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import types, os, re, cgi, sys, time, datetime, functools, mimetypes, threading, logging, traceback, urllib
 
 from db import Dict
@@ -124,7 +127,33 @@ _RESPONSE_HEADERS = (
 
 
 class UTC(datetime.tzinfo):
-	def __init__(self, utc):
+    '''
+    A UTC tzinfo object. 
+    >>> tz0 = UTC('+00:00')
+    >>> tz0.tzname(None)
+    'UTC+00:00'
+    >>> tz8 = UTC('+8:00')
+    >>> tz8.tzname(None)
+    'UTC+8:00'
+    >>> tz7 = UTC('+7:30')
+    >>> tz7.tzname(None)
+    'UTC+7:30'
+    >>> tz5 = UTC('-05:30')
+    >>> tz5.tzname(None)
+    'UTC-05:30'
+    >>> from datetime import datetime
+    >>> u = datetime.utcnow().replace(tzinfo=tz0)
+    >>> l1 = u.astimezone(tz8)
+    >>> l2 = u.replace(tzinfo=tz8)
+    >>> d1 = u - l1
+    >>> d2 = u - l2
+    >>> d1.seconds
+    0
+    >>> d2.seconds
+    28800
+    '''
+
+    def __init__(self, utc):
         utc = str(utc.strip().upper())
         mt = _RE_TZ.match(utc)
         if mt:
@@ -258,7 +287,7 @@ class HttpError(object):
         """
         return _HttpError(403)
 
-  	@staticmethod
+    @staticmethod
     def notfound():
         """
         Send a not found response.
@@ -962,7 +991,7 @@ def post(path):
     return _decorator
    
 def _build_regex(path):
-	re_list = ['^']
+    re_list = ['^']
     var_list = []
     is_var = False
     for v in _re_route.split(path):
