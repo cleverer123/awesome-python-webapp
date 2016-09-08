@@ -45,4 +45,4 @@ wsgi.add_interceptor(urls.manage_interceptor)
 wsgi.add_module(urls)
 
 if __name__ == '__main__':
-    wsgi.run(9000, host='0.0.0.0')
+    wsgi.run(9000, host='127.0.0.1')
